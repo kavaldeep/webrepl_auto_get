@@ -1,0 +1,25 @@
+la function qui envoie le fichier put_file()
+
+mais ou se trouve la update_file_status
+
+rec[2] = 1 // put
+rec[2] =  2  pour get
+
+
+put_file_name contient le nom du fichier
+Mais comment on a put_file_name
+
+
+il envoie rec qui contient la trame responsable de input ou ouput
+
+ou est ws?
+
+ws est un WebSocket il est initialise a la ligne 167
+ws.send pour envoyer
+dans la variable put file data
+put_file_data initialiser a 362
+
+put_file_name initialisera a la ligne 359
+
+
+casse 11 input data ligne 190

@@ -67,6 +67,14 @@
   </div>
 
   <div class="file-box">
+    <strong>Send a file_auto</strong>
+    <input type="file" id="put-file-select-auto" />
+    <div id="put-file-list-auto"></div>
+    <input type="button" value="Send to device auto" id="put-file-button-auto" onclick="put_file_auto_timer(); return false;" />
+  </div>
+
+
+  <div class="file-box">
     <strong>Get a file</strong>
     <input type="text" name="get_filename" id="get_filename" value="" size="13" />
     <input type="button" value="Get from device" onclick="get_file(); return false;" />
@@ -373,6 +381,18 @@ document.getElementById('put-file-select').addEventListener('click', function(){
 document.getElementById('put-file-select').addEventListener('change', handle_put_file_select, false);
 document.getElementById('put-file-button').disabled = true;
 
+
+
+// event listner for pout-file-list-auto
+
+document.getElementById('put-file-select-auto').addEventListener('click', function(){
+    this.value = null;
+}, false);
+
+document.getElementById('put-file-select-auto').addEventListener('change', handle_put_file_select, false);
+document.getElementById('put-file-button-auto').disabled = true;
+
+
 function get_file_auto() {
   console.log("on est dans get file auto poto")
   var src_fname = document.getElementById('get_filename_auto').value;
@@ -402,14 +422,53 @@ function get_file_auto() {
   ws.send(rec);
 }
 
+// function that  call every time the files , you can change the time interval
 function get_file_auto_timer(){
   var texte = 'c est bon';
   console.log(texte);
 
+
+  // you can change the time interval here
   setInterval(get_file_auto , 10000)
 }
 
+function put_file_auto(){
+  console.log("on est dans put_file_auto")
 
+  var dest_fname = put_file_name;
+  var dest_fsize = put_file_data.length;
+
+  // WEBREPL_FILE = "<2sBBQLH64s"
+  var rec = new Uint8Array(2 + 1 + 1 + 8 + 4 + 2 + 64);
+  rec[0] = 'W'.charCodeAt(0);
+  rec[1] = 'A'.charCodeAt(0);
+  rec[2] = 1; // put
+  rec[3] = 0;
+  rec[4] = 0; rec[5] = 0; rec[6] = 0; rec[7] = 0; rec[8] = 0; rec[9] = 0; rec[10] = 0; rec[11] = 0;
+  rec[12] = dest_fsize & 0xff; rec[13] = (dest_fsize >> 8) & 0xff; rec[14] = (dest_fsize >> 16) & 0xff; rec[15] = (dest_fsize >> 24) & 0xff;
+  rec[16] = dest_fname.length & 0xff; rec[17] = (dest_fname.length >> 8) & 0xff;
+  for (var i = 0; i < 64; ++i) {
+      if (i < dest_fname.length) {
+          rec[18 + i] = dest_fname.charCodeAt(i);
+      } else {
+          rec[18 + i] = 0;
+      }
+  }
+  // initiate put
+  binary_state = 11;
+  update_file_status('Sending ' + put_file_name + '...');
+  ws.send(rec);
+
+
+
+}
+
+function put_file_auto_timer(){
+
+console.log("c est bon on est dans put_file_auto")
+
+  setInterval(put_file_auto , 1000)
+}
 
 </script>
 

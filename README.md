@@ -7,9 +7,11 @@ Dans cette version il y a juste un bouton get_file_auto en plus qui permet d'enr
 
 
 
-edit jeu 30 mai 2019
 
 
+edit vendredi 30 mai 2019:
+
+Grace au bouton send_a_file_auto on peut envoyer un fichier après un certain temps mais  on peut récupérer aussi un fichier nommé : kavaldeep.txt
+Pour récupérer un autre fichier que kavaldeep.txt alller dans le code source et  à la place de kavaldeep.txt mettre le nom du fichier souhaiter
 
 
-Ajout d'un bouton send file _auto pour envoyer des fichiers via webrepl automatiquement après un certain temps

@@ -374,6 +374,24 @@ function handle_put_file_select(evt) {
     reader.readAsArrayBuffer(f);
 }
 
+// function handle_put_file_select_auto copié coller
+function handle_put_file_select_auto(evt) {
+    // The event holds a FileList object which is a list of File objects,
+    // but we only support single file selection at the moment.
+    var files = evt.target.files;
+
+    // Get the file info and load its data.
+    var f = files[0];
+    put_file_name = f.name;
+    var reader = new FileReader();
+    reader.onload = function(e) {
+        put_file_data = new Uint8Array(e.target.result);
+        document.getElementById('put-file-list-auto').innerHTML = '' + escape(put_file_name) + ' - ' + put_file_data.length + ' bytes';
+        document.getElementById('put-file-button-auto').disabled = false;
+    };
+    reader.readAsArrayBuffer(f);
+}
+
 document.getElementById('put-file-select').addEventListener('click', function(){
     this.value = null;
 }, false);
@@ -389,13 +407,14 @@ document.getElementById('put-file-select-auto').addEventListener('click', functi
     this.value = null;
 }, false);
 
-document.getElementById('put-file-select-auto').addEventListener('change', handle_put_file_select, false);
+document.getElementById('put-file-select-auto').addEventListener('change', handle_put_file_select_auto, false);
 document.getElementById('put-file-button-auto').disabled = true;
 
 
 function get_file_auto() {
-  console.log("on est dans get file auto poto")
-  var src_fname = document.getElementById('get_filename_auto').value;
+  //debug
+  console.log(" debut get_file_auto on est dans get file auto ")
+  var src_fname = "kavaldeep.txt";
 
   // WEBREPL_FILE = "<2sBBQLH64s"
   var rec = new Uint8Array(2 + 1 + 1 + 8 + 4 + 2 + 64);
@@ -420,6 +439,9 @@ function get_file_auto() {
   get_file_data = new Uint8Array(0);
   update_file_status('Getting ' + get_file_name + '...');
   ws.send(rec);
+
+  //debug
+  console.log("fin de get_file_auto")
 }
 
 // function that  call every time the files , you can change the time interval
@@ -433,10 +455,13 @@ function get_file_auto_timer(){
 }
 
 function put_file_auto(){
-  console.log("on est dans put_file_auto")
+  console.log("on est dans put_file_auto");
 
   var dest_fname = put_file_name;
   var dest_fsize = put_file_data.length;
+
+  //debug
+  console.log("on est dans put_file_auto");
 
   // WEBREPL_FILE = "<2sBBQLH64s"
   var rec = new Uint8Array(2 + 1 + 1 + 8 + 4 + 2 + 64);
@@ -454,20 +479,24 @@ function put_file_auto(){
           rec[18 + i] = 0;
       }
   }
+  //debug
+  console.log("iniate put");
   // initiate put
   binary_state = 11;
   update_file_status('Sending ' + put_file_name + '...');
   ws.send(rec);
-
-
-
+// debug
+console.log("File sent");
+setTimeout(get_file_auto , 60000);
+//debug
+console.log("fin");
 }
-
+// Cette fonction ce repete tout les 3 mins
 function put_file_auto_timer(){
 
-console.log("c est bon on est dans put_file_auto")
+console.log("debut c est bon on est dans put_file_auto_timer");
 
-  setInterval(put_file_auto , 1000)
+  setInterval(put_file_auto , 180000);
 }
 
 </script>
